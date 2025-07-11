@@ -1,12 +1,18 @@
-import style from "../style.css";
+import { useContext } from "react";
+import { FavoriteContext } from "../FavoriteContext";
 import image from "../assets/Breaking-News.jpg";
+import style from "../style.css"; 
 
-const NewsItem = ({ title, description, src, url }) => {
+const NewsItem = ({ news, isFavoritePage = false }) => {
+  const { addToFavorites } = useContext(FavoriteContext);
+
+  const { title, description, urlToImage, url } = news;
+
   return (
     <div className="news-card">
-      <img src={src ? src : image} alt="..." />
+      <img src={urlToImage ? urlToImage : image} alt="..." />
       <div className="news-card-body">
-        <h5 className="news-card-title">{title.slice(0, 50)}</h5>
+        <h5 className="news-card-title">{title ? title.slice(0, 50) : "No title"}</h5>
         <p className="news-card-text">
           {description
             ? description.slice(0, 90)
@@ -20,6 +26,15 @@ const NewsItem = ({ title, description, src, url }) => {
         >
           Read More
         </a>
+        {!isFavoritePage && (
+          <button
+            className="news-card-button"
+            style={{ marginLeft: "10px" }}
+            onClick={() => addToFavorites(news)}
+          >
+            ❤️ Add to Favorites
+          </button>
+        )}
       </div>
     </div>
   );

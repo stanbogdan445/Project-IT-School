@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 
 const NewsBoard = ({ category }) => {
@@ -7,10 +6,12 @@ const NewsBoard = ({ category }) => {
 
   useEffect(() => {
     const API_KEY = "e5ca2818288d4ba38ba6c73f3e9300b0";
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`;
+    const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`;
+
     fetch(url)
       .then((response) => response.json())
-      .then((data) => setArticles(data.articles));
+      .then((data) => setArticles(data.articles))
+      .catch((error) => console.error("Error fetching news:", error));
   }, [category]);
 
   return (
@@ -25,10 +26,7 @@ const NewsBoard = ({ category }) => {
         articles.map((news, index) => (
           <NewsItem
             key={index}
-            title={news.title}
-            description={news.description}
-            src={news.urlToImage}
-            url={news.url}
+            news={news}  
           />
         ))
       )}
