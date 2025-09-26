@@ -3,38 +3,16 @@ import NewsItem from "./NewsItem";
 
 const NewsBoard = ({ category }) => {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const API_KEY = "dd90d3345760a1e80ce1032b863bf63e";
-    const fetchNews = async (cat) => {
-      try {
-        const url = `https://gnews.io/api/v4/top-headlines?category=${cat}&lang=en&apikey=${API_KEY}`;
-        const response = await fetch(url);
-        const data = await response.json();
+    const API_KEY = "e5ca2818288d4ba38ba6c73f3e9300b0";
+    const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${API_KEY}`;
 
-        if (data.articles && data.articles.length > 0) {
-          setArticles(data.articles);
-        } else if (cat !== "general") {
-          // fallback la categoria 'general'
-          fetchNews("general");
-        } else {
-          setArticles([]);
-        }
-      } catch (error) {
-        console.error("Error fetching news:", error);
-        setArticles([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews(category);
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => setArticles(data.articles))
+      .catch((error) => console.error("Error fetching news:", error));
   }, [category]);
-
-  if (loading) {
-    return <p className="text-center mt-5">Loading news...</p>;
-  }
 
   return (
     <div>
@@ -45,7 +23,12 @@ const NewsBoard = ({ category }) => {
       {articles.length === 0 ? (
         <p className="text-center mt-5">No news available for this category.</p>
       ) : (
-        articles.map((news, index) => <NewsItem key={index} news={news} />)
+        articles.map((news, index) => (
+          <NewsItem
+            key={index}
+            news={news}  
+          />
+        ))
       )}
     </div>
   );
